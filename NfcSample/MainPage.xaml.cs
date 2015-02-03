@@ -6,6 +6,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Networking.Proximity;
+using Windows.UI.Core;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -25,6 +26,7 @@ namespace NfcSample
     public sealed partial class MainPage : Page
     {
         long subscribedMessageId;
+        long detectWriteableTagId;
 
         public MainPage()
         {
@@ -49,6 +51,9 @@ namespace NfcSample
                 // Protocol:  Select which type of NFC Message you wish to receive
                 // Handler:  Event handler that is trigger when an NFC Tag is detected of the protocol specified
                 subscribedMessageId = device.SubscribeForMessage("Windows.SampleMessage", MessageReceivedHandler);
+
+                // Listen for a writable tag.  This protocol is only available for listening.
+                detectWriteableTagId = device.SubscribeForMessage("WriteableTag", WritableTagDetectedHandler);
             }
             else
             {
@@ -64,6 +69,21 @@ namespace NfcSample
             await dialog.ShowAsync();
 
             device.StopSubscribingForMessage(subscribedMessageId);
+        }
+
+        private async void WritableTagDetectedHandler(ProximityDevice device, ProximityMessage message)
+        {
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
+            {
+                WriteTag.IsEnabled = true;
+                
+                // Proximity messages contains the capacity of the NFC tag
+                var capacity = System.BitConverter.ToInt32(message.Data.ToArray(), 0);
+                var dialog = new MessageDialog("NFC Tag Capacity: " + capacity);
+                await dialog.ShowAsync();
+            });
+
+            device.StopSubscribingForMessage(detectWriteableTagId);
         }
     }
 }
