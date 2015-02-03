@@ -24,6 +24,8 @@ namespace NfcSample
     /// </summary>
     public sealed partial class MainPage : Page
     {
+        long subscribedMessageId;
+
         public MainPage()
         {
             this.InitializeComponent();
@@ -38,16 +40,30 @@ namespace NfcSample
         /// This parameter is typically used to configure the page.</param>
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
-            if (ProximityDevice.GetDefault() != null)
+            var device = ProximityDevice.GetDefault();
+            if (device != null)
             {
                 var dialog = new MessageDialog("NFC Present");
                 await dialog.ShowAsync();
+                
+                // Protocol:  Select which type of NFC Message you wish to receive
+                // Handler:  Event handler that is trigger when an NFC Tag is detected of the protocol specified
+                subscribedMessageId = device.SubscribeForMessage("Windows.SampleMessage", MessageReceivedHandler);
             }
             else
             {
                 var dialog = new MessageDialog("Sorry, your device does not have NFC, or it is disabled.");
                 await dialog.ShowAsync();
             }
+        }
+
+        private async void MessageReceivedHandler(ProximityDevice device, ProximityMessage message)
+        {
+            // Data:  byte array stored in the NFC tag
+            var dialog = new MessageDialog("NFC Data: " + message.DataAsString);
+            await dialog.ShowAsync();
+
+            device.StopSubscribingForMessage(subscribedMessageId);
         }
     }
 }
