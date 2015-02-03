@@ -64,15 +64,20 @@ namespace NfcSample
 
         private async void MessageReceivedHandler(ProximityDevice device, ProximityMessage message)
         {
-            // Data:  byte array stored in the NFC tag
-            var dialog = new MessageDialog("NFC Data: " + message.DataAsString);
-            await dialog.ShowAsync();
-
             device.StopSubscribingForMessage(subscribedMessageId);
+
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
+            {
+                // Data:  byte array stored in the NFC tag
+                var dialog = new MessageDialog("NFC Data: " + message.DataAsString);
+                await dialog.ShowAsync();
+            });
         }
 
         private async void WritableTagDetectedHandler(ProximityDevice device, ProximityMessage message)
         {
+            device.StopSubscribingForMessage(detectWriteableTagId);
+
             await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
             {
                 WriteTag.IsEnabled = true;
@@ -83,7 +88,6 @@ namespace NfcSample
                 await dialog.ShowAsync();
             });
 
-            device.StopSubscribingForMessage(detectWriteableTagId);
         }
     }
 }
