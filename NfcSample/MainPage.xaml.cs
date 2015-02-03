@@ -50,10 +50,10 @@ namespace NfcSample
                 
                 // Protocol:  Select which type of NFC Message you wish to receive
                 // Handler:  Event handler that is trigger when an NFC Tag is detected of the protocol specified
-                //subscribedMessageId = device.SubscribeForMessage("Windows.SampleMessage", MessageReceivedHandler);
+                subscribedMessageId = device.SubscribeForMessage("Windows.SampleMessage", MessageReceivedHandler);
 
                 // Listen for a writable tag.  This protocol is only available for listening.
-                detectWriteableTagId = device.SubscribeForMessage("WriteableTag", WritableTagDetectedHandler);
+                // detectWriteableTagId = device.SubscribeForMessage("WriteableTag", WritableTagDetectedHandler);
             }
             else
             {
