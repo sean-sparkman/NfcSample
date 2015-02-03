@@ -9,6 +9,6 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
-        <Button x:Name="WriteTag" HorizontalAlignment="Center" IsEnabled="False">Write NFC Tag</Button>
+        <Button x:Name="WriteTag" HorizontalAlignment="Center" IsEnabled="False" Click="WriteTag_Click">Write NFC Tag</Button>
     </Grid>
 </Page>

@@ -50,7 +50,7 @@ namespace NfcSample
                 
                 // Protocol:  Select which type of NFC Message you wish to receive
                 // Handler:  Event handler that is trigger when an NFC Tag is detected of the protocol specified
-                subscribedMessageId = device.SubscribeForMessage("Windows.SampleMessage", MessageReceivedHandler);
+                //subscribedMessageId = device.SubscribeForMessage("Windows.SampleMessage", MessageReceivedHandler);
 
                 // Listen for a writable tag.  This protocol is only available for listening.
                 detectWriteableTagId = device.SubscribeForMessage("WriteableTag", WritableTagDetectedHandler);
@@ -87,7 +87,25 @@ namespace NfcSample
                 var dialog = new MessageDialog("NFC Tag Capacity: " + capacity);
                 await dialog.ShowAsync();
             });
+        }
 
+        private void WriteTag_Click(object sender, RoutedEventArgs e)
+        {
+            var device = ProximityDevice.GetDefault();
+
+            var message = System.Text.Encoding.UTF8.GetBytes("Hello North Dallas .NET User Group!");
+
+            // Windows protocol is used to write a custom type to write binary data.  It encapsulates NDEF manipulations.  
+            device.PublishBinaryMessage("Windows:WriteTag.SampleMessage", message.AsBuffer(), MessageWritenHandler);
+        }
+
+        private async void MessageWritenHandler(ProximityDevice device, long messageId)
+        {
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
+            {
+                var dialog = new MessageDialog("Message Id: " + messageId);
+                await dialog.ShowAsync();
+            });
         }
     }
 }
