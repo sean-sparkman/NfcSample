@@ -93,10 +93,10 @@ namespace NfcSample
         {
             var device = ProximityDevice.GetDefault();
 
-            var url = System.Text.Encoding.Unicode.GetBytes("http://dfwmobile.net");
+            var url = System.Text.Encoding.Unicode.GetBytes("Page=Profile&ProfileId=1\tWindowsPhone\t{81238de8-a99f-453b-9ed4-b83f96fbc5c0}");
 
             // Windows protocol is used to write a custom type to write binary data.  It encapsulates NDEF manipulations.  
-            device.PublishBinaryMessage("WindowsUri:WriteTag", url.AsBuffer(), MessageWritenHandler);
+            device.PublishBinaryMessage("LaunchApp:WriteTag", url.AsBuffer(), MessageWritenHandler);
         }
 
         private async void MessageWritenHandler(ProximityDevice device, long messageId)
