@@ -42,6 +42,14 @@ namespace NfcSample
         /// This parameter is typically used to configure the page.</param>
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
+            if (e.Parameter != null)
+            {
+                await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
+                {
+                    Parameters.Text = string.Format("Parameters:\n {0}", e.Parameter);
+                });
+            }
+
             var device = ProximityDevice.GetDefault();
             if (device != null)
             {
