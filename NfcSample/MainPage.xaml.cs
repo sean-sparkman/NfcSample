@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -61,13 +62,12 @@ namespace NfcSample
                 });
             }
 
+            ChooseProfile.ItemsSource = ProfileService.GetProfiles();
+
             var device = ProximityDevice.GetDefault();
             if (device != null)
             {
-                var dialog = new MessageDialog("NFC Present");
-                await dialog.ShowAsync();
-                
-                // Protocol:  Select which type of NFC Message you wish to receive
+                 // Protocol:  Select which type of NFC Message you wish to receive
                 // Handler:  Event handler that is trigger when an NFC Tag is detected of the protocol specified
                 subscribedMessageId = device.SubscribeForMessage("Windows.SampleMessage", MessageReceivedHandler);
 
@@ -100,31 +100,31 @@ namespace NfcSample
             await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
             {
                 WriteTag.IsEnabled = true;
-                
-                // Proximity messages contains the capacity of the NFC tag
-                var capacity = System.BitConverter.ToInt32(message.Data.ToArray(), 0);
-                var dialog = new MessageDialog("NFC Tag Capacity: " + capacity);
-                await dialog.ShowAsync();
             });
         }
 
-        private void WriteTag_Click(object sender, RoutedEventArgs e)
+        private async void WriteTag_Click(object sender, RoutedEventArgs e)
         {
-            var device = ProximityDevice.GetDefault();
+            var profile = ChooseProfile.SelectedItem as Profile;
+            if (profile != null)
+            {
+                var device = ProximityDevice.GetDefault();
 
-            var url = System.Text.Encoding.Unicode.GetBytes("Page=Profile&ProfileId=1\tWindowsPhone\t{81238de8-a99f-453b-9ed4-b83f96fbc5c0}");
+                var url = System.Text.Encoding.Unicode.GetBytes("Page=Profile&ProfileId=" + profile.Id + "\tWindowsPhone\t{81238de8-a99f-453b-9ed4-b83f96fbc5c0}");
 
-            // Windows protocol is used to write a custom type to write binary data.  It encapsulates NDEF manipulations.  
-            device.PublishBinaryMessage("LaunchApp:WriteTag", url.AsBuffer(), MessageWritenHandler);
+                // Windows protocol is used to write a custom type to write binary data.  It encapsulates NDEF manipulations.  
+                device.PublishBinaryMessage("LaunchApp:WriteTag", url.AsBuffer(), MessageWritenHandler);
+            }
+            else
+            {
+                var dialog = new MessageDialog("Please choose a profile.");
+                await dialog.ShowAsync();
+            }
         }
 
         private async void MessageWritenHandler(ProximityDevice device, long messageId)
         {
-            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
-            {
-                var dialog = new MessageDialog("Message Id: " + messageId);
-                await dialog.ShowAsync();
-            });
+            
         }
     }
 }

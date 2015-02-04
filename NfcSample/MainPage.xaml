@@ -14,6 +14,21 @@
                Width="250" Height="250"
                Margin="10, 45, 10, 10"
                VerticalAlignment="Top"></Image>
-        <Button x:Name="WriteTag" HorizontalAlignment="Center" IsEnabled="False" Click="WriteTag_Click">Write NFC Tag</Button>
+        <ComboBox x:Name="ChooseProfile" VerticalAlignment="Bottom"
+                  Margin="10, 0, 10, 50">
+            <ComboBox.ItemTemplate>
+                <DataTemplate >
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="{Binding ImageUri}"
+                               Width="100" Height="100"
+                               Margin="10, 10, 15, 0"></Image>
+                        <TextBlock Text="{Binding Name}"></TextBlock>
+                    </StackPanel>                    
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
+        </ComboBox>
+        <Button x:Name="WriteTag" HorizontalAlignment="Center"
+                VerticalAlignment="Bottom"
+                IsEnabled="False" Click="WriteTag_Click">Write NFC Tag</Button>
     </Grid>
 </Page>

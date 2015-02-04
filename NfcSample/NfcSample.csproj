@@ -79,9 +79,6 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
@@ -104,7 +101,6 @@
     <Content Include="Assets\Icon.jpg" />
     <Content Include="Assets\Logo.scale-240.png" />
     <Content Include="Assets\Luminara.png" />
-    <Content Include="Assets\Luminara_TCW.jpg" />
     <Content Include="Assets\Obi-Wan.png" />
     <Content Include="Assets\SmallLogo.scale-240.png" />
     <Content Include="Assets\SplashScreen.scale-240.png" />
