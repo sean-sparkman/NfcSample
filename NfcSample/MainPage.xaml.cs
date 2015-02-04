@@ -53,7 +53,7 @@ namespace NfcSample
                 subscribedMessageId = device.SubscribeForMessage("Windows.SampleMessage", MessageReceivedHandler);
 
                 // Listen for a writable tag.  This protocol is only available for listening.
-                // detectWriteableTagId = device.SubscribeForMessage("WriteableTag", WritableTagDetectedHandler);
+                detectWriteableTagId = device.SubscribeForMessage("WriteableTag", WritableTagDetectedHandler);
             }
             else
             {
@@ -93,10 +93,10 @@ namespace NfcSample
         {
             var device = ProximityDevice.GetDefault();
 
-            var message = System.Text.Encoding.UTF8.GetBytes("Hello North Dallas .NET User Group!");
+            var url = System.Text.Encoding.Unicode.GetBytes("http://dfwmobile.net");
 
             // Windows protocol is used to write a custom type to write binary data.  It encapsulates NDEF manipulations.  
-            device.PublishBinaryMessage("Windows:WriteTag.SampleMessage", message.AsBuffer(), MessageWritenHandler);
+            device.PublishBinaryMessage("WindowsUri:WriteTag", url.AsBuffer(), MessageWritenHandler);
         }
 
         private async void MessageWritenHandler(ProximityDevice device, long messageId)
