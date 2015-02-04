@@ -9,7 +9,11 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
-        <TextBlock x:Name="Parameters" FontSize="40"></TextBlock>
+        <TextBlock x:Name="ProfileName" FontSize="40" Margin="10, 0, 0, 0">Profile Name</TextBlock>
+        <Image x:Name="ProfilePicture" Source="/Assets/Icon.jpg"
+               Width="250" Height="250"
+               Margin="10, 45, 10, 10"
+               VerticalAlignment="Top"></Image>
         <Button x:Name="WriteTag" HorizontalAlignment="Center" IsEnabled="False" Click="WriteTag_Click">Write NFC Tag</Button>
     </Grid>
 </Page>

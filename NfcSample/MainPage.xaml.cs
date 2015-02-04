@@ -14,6 +14,7 @@ using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=391641
@@ -42,11 +43,21 @@ namespace NfcSample
         /// This parameter is typically used to configure the page.</param>
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
-            if (e.Parameter != null)
+            if (!string.IsNullOrEmpty((string)e.Parameter))
             {
+                // parsing the query string, not pretty stuff
+                var parameters = ((string)e.Parameter).Split('&');
+                var profileId = parameters.FirstOrDefault(p => p.StartsWith("ProfileId"));
+                var id = int.Parse(profileId.Split('=')[1]);
+
+                var profile = ProfileService.Get(id);
                 await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
                 {
-                    Parameters.Text = string.Format("Parameters:\n {0}", e.Parameter);
+                    ProfileName.Text = profile.Name;
+
+                    var image = new BitmapImage();
+                    image.UriSource = new Uri(profile.ImageUri);
+                    ProfilePicture.Source = image;
                 });
             }
 
